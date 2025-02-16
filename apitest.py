@@ -33,5 +33,5 @@ else:
         data = json.loads(response_content)
         print("Decoded JSON:", data)
     except json.JSONDecodeError as e:
-        print("Error decoding JSON:", e)
+        print("Error decoding JSO luckN:", e)
 
