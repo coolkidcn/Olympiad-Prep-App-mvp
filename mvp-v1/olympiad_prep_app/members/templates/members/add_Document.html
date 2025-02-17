@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Document</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Include padding and border in width */
+            width: calc(100% - 18px); /* Adjust width to account for padding/border */
+        }
+        textarea {
+            height: 150px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .errorlist {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create New Document</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <ul class="errorlist">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field|capfirst }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <label for="{{ form.name.id_for_label }}">Name:</label>
+            {{ form.name }}
+            AP African American Studies #2 - 1.2 The African Continent: A Varied Landscape
+            <label for="{{ form.text.id_for_label }}">Text:</label>
+            {{ form.text }}
+
+            <label for="{{ form.viewers.id_for_label }}">Viewers:</label>
+            {{ form.viewers }}
+
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</body>
+</html>

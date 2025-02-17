@@ -54,3 +54,18 @@ def user_dashboard(request, memberName):
         return render(request, 'members/user_dashboard.html', context)
     return HttpResponse("Not an User")
   
+
+from .forms import DocumentForm  # Import your form
+
+def add_Document(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST) #, request.FILES if you have file uploads
+        if form.is_valid():
+            document = form.save(commit=False) # Don't save yet
+            document.creatorId = request.user.id # Set the creator ID from the request
+            document.save() # Now save
+            return redirect('myuser_dashboard')  # Replace 'success_url'
+    else:
+        form = DocumentForm()
+
+    return render(request, 'members/add_Document.html', {'form': form})
