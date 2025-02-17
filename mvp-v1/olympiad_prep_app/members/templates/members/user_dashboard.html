@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+
+        .header {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+        }
+
+        .user-info span {
+            margin-bottom: 5px;
+        }
+
+        .friends-list {
+            margin-top: 5px;
+        }
+
+        .friends-list span {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .content { /* Style for the content wrapper */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Align sections to the left */
+        }
+
+        .section {
+            width: 48%; /* Two columns */
+            margin: 1%; /* Consistent margin all around */
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                width: 100%; /* Stack vertically */
+                margin: 1% 0; /* Adjust margins for stacked layout */
+            }
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .create-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                {% if user.profile.avatar %}
+                    <br>
+                {% endif %}
+                
+                {% if user.username == member.username%}
+                    <span>Welcome, {{ user.username }} , {{user.id}}!</span>
+                {% else %}
+                    <span>Welcome, {{ user.username }} , {{user.id}}!<br> Viewing : {{member.username}}</span>
+                {% endif %}
+                {% if friends %}
+                    <div class="friends-list">
+                        <span>Friends:</span>
+                        {% for friend in friends %}
+                            <a href="/members/{{friend}}"><span>{{ friend.username }}{% if not forloop.last %}, {% endif %}</span></a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="content">  <div class="section">
+                <div class="section-title">Your Mind Maps</div>
+                {% if mindmaps %}
+                    <ul>
+                        {% for mindmap in mindmaps %}
+                            <li>{{ mindmap.title }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No mind maps found.</p>
+                {% endif %}
+                <br>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Your Documents</div>
+                {% if documents %}
+                    <ul>
+                        {% for document in documents %}
+                            <li>{{ document.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No documents found.</p>
+                {% endif %}
+                <br>
+            </div>
+        </div>  </div>
+</body>
+</html>
