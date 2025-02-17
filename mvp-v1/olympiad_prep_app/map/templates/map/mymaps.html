@@ -5,21 +5,21 @@
     <style>
         body {
             font-family: sans-serif;
-            margin: 0; /* Remove default body margin */
+            margin: 0;
             background-color: #f4f4f4; /* Light background color */
         }
 
         .container {
             width: 90%;
-            max-width: 1200px; /* Set a maximum width */
+            max-width: 1200px;
             margin: 20px auto;
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr; /* Single column layout for overall container */
             gap: 20px;
         }
 
         .header {
-            grid-column: 1 / -1;
+            grid-column: 1 / -1; /* Header spans all columns */
             background-color: #fff;
             padding: 20px;
             border-bottom: 1px solid #ddd;
@@ -29,7 +29,7 @@
         }
 
         .header h1 {
-            margin: 0; /* Remove default h1 margin */
+            margin: 0;
             font-size: 1.8em;
         }
 
@@ -40,22 +40,22 @@
 
         .create-buttons button {
             padding: 10px 15px;
-            background-color: #007bff; /* Blue */
+            background-color: #007bff; /* Blue button */
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
             font-size: 1em;
-            transition: background-color 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease; /* Smooth hover effect */
         }
 
         .create-buttons button:hover {
             background-color: #0056b3; /* Darker blue on hover */
         }
 
-        .grid-container { /* Common grid styles */
+        .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
             gap: 20px;
         }
 
@@ -69,11 +69,11 @@
             min-height: 250px;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             border-radius: 8px; /* Rounded corners */
-            transition: transform 0.2s ease; /* Smooth transition */
+            transition: transform 0.2s ease; /* Smooth hover effect */
         }
 
         .mindmap-box:hover, .document-box:hover {
-            transform: translateY(-5px); /* Move up slightly on hover */
+            transform: translateY(-5px); /* Move box up slightly on hover */
         }
 
         .mindmap-title, .document-title {
@@ -92,7 +92,7 @@
         .mindmap-box ul, .document-box ul {
             list-style-type: none;
             padding: 0;
-            flex-grow: 1;
+            flex-grow: 1; /* Allow list to take up available space */
         }
 
         .mindmap-box li, .document-box li {
@@ -105,6 +105,22 @@
             font-style: italic;
             margin-top: 20px;
         }
+
+        .add-document-button {
+            padding: 5px 10px;
+            background-color: #007bff; /* Blue */
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-document-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
     </style>
 </head>
 <body>
@@ -112,12 +128,12 @@
         <div class="header">
             <h1>Welcome, {{ username }}!</h1>
             <div class="create-buttons">
-                <button onclick="window.location.href=''">Create Mindmap</button>
-                <button onclick="window.location.href=''">Create Document</button> 
+                <button id="createMindmapButton">Create Mindmap</button>
+                <button id="createDocumentButton">Create Document</button>
             </div>
         </div>
 
-        <div class="mindmap-grid grid-container">  {# Added grid-container class #}
+        <div class="mindmap-grid grid-container">
             {% for mindmap in mindmaps %}
                 <div class="mindmap-box">
                     <div class="mindmap-title">{{ mindmap.name }}</div>
@@ -130,6 +146,7 @@
                             <li class="no-items">No documents associated with this mindmap.</li>
                         {% endif %}
                     </ul>
+                    <button class="add-document-button" data-mindmap-name="{{ mindmap.name }}">Add Document</button>
                 </div>
             {% endfor %}
 
@@ -138,11 +155,19 @@
             {% endif %}
         </div>
 
-        <div class="document-grid grid-container">  {# Added grid-container class #}
+        <div class="document-grid grid-container">
             {% for document in documents %}
                 <div class="document-box">
                     <div class="document-title">{{ document.name }}</div>
                     <div class="document-owner">Owner: {{ document.creator_username }}</div>
+                    <ul>
+                        {% for mindmap in document.Mindmaps.all %}
+                            <li>{{ mindmap.name }}</li>
+                        {% endfor %}
+                        {% if not document.Mindmaps.all %}
+                            <li class="no-items">No mindmaps associated with this document.</li>
+                        {% endif %}
+                    </ul>
                 </div>
             {% endfor %}
 
@@ -151,5 +176,24 @@
             {% endif %}
         </div>
     </div>
+
+    <script>
+        document.getElementById("createMindmapButton").addEventListener("click", function() {
+            window.location.href = "{% url 'create_mindmap' %}";
+        });
+
+        document.getElementById("createDocumentButton").addEventListener("click", function() {
+            window.location.href = "{% url 'add_Document' %}";
+        });
+
+
+        // Event delegation for "Add Document" buttons
+        document.querySelector(".mindmap-grid").addEventListener("click", function(event) {
+            if (event.target.classList.contains("add-document-button")) {
+                const mindmapName = encodeURIComponent(event.target.dataset.mindmapName);
+                window.location.href = `/map/${mindmapName}/addDocument/`;
+            }
+        });
+    </script>
 </body>
 </html>

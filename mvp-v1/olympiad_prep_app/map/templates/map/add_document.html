@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Document to Mindmap</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure full viewport height */
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 400px; /* Adjust width as needed */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Document to {{ mindMap.name }}</h1>
+
+        {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>  </p> <p>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="document">Select Document:</label>
+            <select name="document" id="document">
+                <option value="">-- Select a document --</option>
+                {% for document in available_documents %}
+                    <option value="{{ document.documentId }}">{{ document.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Add Document</button>
+        </form>
+
+        <a class="back-link" href="{% url 'userMaps' %}">Back to Maps</a>
+    </div>
+</body>
+</html>

@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 import json
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.decorators import login_required  # Import the login_required decorator
+  
 from members.models import Document, Mindmap, Member
 
 # Create your views here.
@@ -47,3 +48,38 @@ def userMaps(request):
             }
         return redirect('members/myuser_dashboard')
     return HttpResponse("No Response")
+
+@login_required
+def addDocument(request, mindMapName):
+    try:
+        member = Member.objects.get(authuser=request.user)
+    except Member.DoesNotExist:
+        return redirect('members/myuser_dashboard')
+
+    try:
+        mindMap = Mindmap.objects.get(name=mindMapName, viewers=member)
+    except Mindmap.DoesNotExist:
+        return redirect('userMaps')
+
+    available_documents = Document.objects.filter(viewers=member) 
+
+    if request.method == 'POST':
+        document_id = request.POST.get('document')
+
+        if document_id:
+            try:
+                document = Document.objects.get(pk=document_id, viewers=member)  # Ensure user owns document
+                if mindMap in document.Mindmaps.all():  # Check for existing association
+                    error_message = "Document is already associated with this mindmap."
+                    return render(request, 'map/add_document.html', {'mindMap': mindMap, 'available_documents': available_documents, 'error_message': error_message})
+
+                mindMap.documents.add(document)  # Link the document to the mindmap
+                return redirect('userMaps')  # Redirect back to maps page
+            except Document.DoesNotExist:
+                error_message = "Invalid document selected."
+                return render(request, 'map/add_document.html', {'mindMap': mindMap, 'available_documents': available_documents, 'error_message': error_message})
+        else:
+            error_message = "No document selected."
+            return render(request, 'map/add_document.html', {'mindMap': mindMap, 'available_documents': available_documents, 'error_message': error_message})
+
+    return render(request, 'map/add_document.html', {'mindMap': mindMap, 'available_documents': available_documents})
