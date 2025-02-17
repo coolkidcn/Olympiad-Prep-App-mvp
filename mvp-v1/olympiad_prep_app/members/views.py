@@ -35,7 +35,7 @@ def myuser_dashboard(request):
         context = {
             'username':member.username,
             }
-        #return render(request, 'user_dashboard.html', context)
+        return render(request, 'members/myuser_dashboard.html', context)
     return HttpResponse("No Response")
 
 

@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path('request/', include('request.urls')),
-    #path('map/', include('map.urls')),
+    path('map/', include('map.urls')),
     #path('learn/', include('learn.urls')),
     path('', include('members.urls')),
 ]
