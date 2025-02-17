@@ -83,3 +83,25 @@ def addDocument(request, mindMapName):
             return render(request, 'map/add_document.html', {'mindMap': mindMap, 'available_documents': available_documents, 'error_message': error_message})
 
     return render(request, 'map/add_document.html', {'mindMap': mindMap, 'available_documents': available_documents})
+
+
+@login_required
+def document_detail(request, document_name):
+    try:
+        member = Member.objects.get(authuser=request.user)
+    except Member.DoesNotExist:
+        return redirect('members/myuser_dashboard')
+
+    try:
+        document = Document.objects.get(name = document_name, viewers = member )
+    except Document.DoesNotExist:  
+        return HttpResponse("Document not found"+ ":" + document_name )
+    return render(request, 'map/document_detail.html', {'document': document, "creator": Member.objects.get(pk = document.creatorId)})
+
+@login_required
+def create_mindmap(request):
+    return HttpResponse("create map")
+
+@login_required
+def mindmap_detail(request, mindMapName):
+    return HttpResponse(mindMapName)

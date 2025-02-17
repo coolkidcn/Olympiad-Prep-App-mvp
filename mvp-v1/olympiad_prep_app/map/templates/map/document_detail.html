@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Detail</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .document-info {
+            margin-bottom: 20px;
+        }
+
+        .document-info p {
+            margin-bottom: 5px;
+        }
+
+        .document-content {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            overflow-wrap: break-word; /* Break words if necessary */
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ document.name }}</h1>
+
+        <div class="document-info">
+            <p><strong>Owner:</strong> {{ creator.username }}</p>  </p> <p>
+            </div>
+
+        <div class="document-content">
+            {{ document.text }}
+        </div>
+
+        <a class="back-link" href="{% url 'userMaps' %}">Back to Maps</a>
+    </div>
+</body>
+</html>

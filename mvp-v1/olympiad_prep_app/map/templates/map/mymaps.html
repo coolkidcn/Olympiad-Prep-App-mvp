@@ -132,7 +132,6 @@
                 <button id="createDocumentButton">Create Document</button>
             </div>
         </div>
-
         <div class="mindmap-grid grid-container">
             {% for mindmap in mindmaps %}
                 <div class="mindmap-box">
@@ -140,7 +139,7 @@
                     <div class="mindmap-owner">Owner: {{ mindmap.creator_username }}</div>
                     <ul>
                         {% for document in mindmap.documents.all %}
-                            <li>{{ document.name }}</li>
+                            <li><a href="/map/document/{{ document.name }}/">{{ document.name }}</a></li>
                         {% endfor %}
                         {% if not mindmap.documents.all %}
                             <li class="no-items">No documents associated with this mindmap.</li>
@@ -162,7 +161,7 @@
                     <div class="document-owner">Owner: {{ document.creator_username }}</div>
                     <ul>
                         {% for mindmap in document.Mindmaps.all %}
-                            <li>{{ mindmap.name }}</li>
+                            <li><a href="/map/{{ mindmap.name }}/">{{ mindmap.name }}</a></li>
                         {% endfor %}
                         {% if not document.Mindmaps.all %}
                             <li class="no-items">No mindmaps associated with this document.</li>
@@ -176,6 +175,7 @@
             {% endif %}
         </div>
     </div>
+
 
     <script>
         document.getElementById("createMindmapButton").addEventListener("click", function() {
